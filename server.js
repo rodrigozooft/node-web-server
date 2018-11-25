@@ -1,11 +1,29 @@
 const express = require('express');
 const hbs = require('hbs');
 const dateFormat = require('dateformat');
+const fs = require('fs');
 
 var app = express();
+var now = new Date();
 
 hbs.registerPartials(__dirname + '/views/partials');
 app.set('view engine', 'hbs');
+
+app.use((req, res, next) => {
+  var log = `${dateFormat(now)}: ${req.method} ${req.originalUrl}`;
+  fs.appendFile('server.log', log + '\n', (err) => {
+    if (err){
+      console.log('Unable to append to sever.log.')
+    }
+  });
+  console.log(log);
+  next();
+});
+
+// app.use((req, res, next) => {
+//   res.render('maintenance.hbs');
+//   next();
+// });
 
 app.use(express.static(__dirname + '/public'));
 
@@ -17,7 +35,6 @@ hbs.registerHelper('screamIt', (text) => {
   return text.toUpperCase();
 });
 
-var now = new Date();
 app.get('/', (req, res) => {
   res.render('home.hbs', {
     pageTitle: 'My first Website with Node',
