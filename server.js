@@ -3,6 +3,8 @@ const hbs = require('hbs');
 const dateFormat = require('dateformat');
 const fs = require('fs');
 
+const port = process.env.PORT || 3000;
+
 var app = express();
 var now = new Date();
 
@@ -55,6 +57,6 @@ app.get('/bad', (req, res) => {
   })
 });
 
-app.listen(3000, () =>{
-  console.log('Server is working in port 3000');
+app.listen(port, () =>{
+  console.log(`Server is working in port ${port}`);
 });
